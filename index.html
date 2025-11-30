@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Day Trading Challenge</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-600 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-2 text-center" id="authTitle">Welcome to Trading Challenge</h2>
+            <p class="text-slate-400 mb-6 text-sm text-center" id="authSubtitle">Please sign up or log in to continue</p>
+            
+            <div id="authForm">
+                <div class="space-y-4">
+                    <div id="nameField" class="hidden">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                        <input type="text" id="userFullName" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="John Doe">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="userEmail" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="your@email.com">
+                    </div>
+                    
+                    <div id="passwordField" class="hidden">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                        <input type="password" id="userPassword" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="••••••••">
+                    </div>
+                    
+                    <div id="confirmPasswordField" class="hidden">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Confirm Password</label>
+                        <input type="password" id="userConfirmPassword" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="••••••••">
+                    </div>
+
+                    <div id="authMessage" class="text-center text-red-400 text-sm my-2 hidden"></div>
+
+                    <button onclick="handleAuth()" id="authButton" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition shadow-lg shadow-emerald-900/50">
+                        Continue
+                    </button>
+                    
+                    <div class="text-center mt-4">
+                        <button onclick="toggleAuthMode()" id="toggleAuth" class="text-slate-400 hover:text-slate-300 text-sm">
+                            Don't have an account? Sign up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETUP MODAL -->
+    <div id="setupModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 hidden">
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-600 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-2"><i class="fas fa-rocket mr-2"></i>New Challenge Setup</h2>
+            <p class="text-slate-400 mb-6 text-sm">Personalize your 100-day journey.</p>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Your Name</label>
+                        <input type="text" id="userName" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. Alex">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Your Age</label>
+                        <input type="number" id="userAge" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. 25">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Initial Capital ($)</label>
+                    <input type="number" id="initCapital" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. 1000">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Initial Target % (Daily)</label>
+                    <input type="number" id="initialTargetPerc" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. 3.0">
+                    <p class="text-xs text-slate-500 mt-1">This is your ideal compounding goal.</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Start Date</label>
+                    <input type="date" id="startDate" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:border-emerald-500 focus:outline-none">
+                </div>
+
+                <div class="text-center bg-slate-700/50 p-3 rounded-lg text-sm">
+                    <p class="text-slate-400">100-Day Target with this percentage:</p>
+                    <p id="initialProjectionDisplay" class="text-lg font-bold text-yellow-400 mono mt-1">$0.00</p>
+                </div>
+
+                <button onclick="startChallenge()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition shadow-lg shadow-emerald-900/50">
+                    Initialize Protocol
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAILY QUIZ MODAL -->
+    <div id="quizModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 hidden">
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-600 max-w-lg w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-2 text-center"><i class="fas fa-brain mr-2"></i>Daily Focus Challenge</h2>
+            <p class="text-slate-400 mb-6 text-sm text-center">Attempt: <span id="quizAttemptCount" class="font-bold text-yellow-300">1</span></p>
+            
+            <div id="quizContent" class="text-center space-y-6">
+                <div class="text-xl text-slate-300">Time Left: <span id="quizTimer" class="font-bold text-red-400">10s</span></div>
+                <div class="text-5xl font-extrabold text-white mono" id="quizQuestion"></div>
+                
+                <div>
+                    <input type="number" id="quizAnswer" class="w-full max-w-xs text-center bg-slate-900 border border-slate-600 rounded p-3 text-white text-3xl mono focus:border-yellow-500 focus:outline-none" placeholder="?" autofocus>
+                </div>
+            </div>
+
+            <div id="quizMessage" class="text-center text-red-400 text-lg font-semibold my-4 hidden"></div>
+
+            <div class="mt-6 text-center flex gap-4 justify-center">
+                <button onclick="checkQuizAnswer()" id="quizSubmitBtn" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 px-8 rounded transition shadow-lg shadow-yellow-900/50">
+                    Submit Answer
+                </button>
+                <button onclick="retryQuiz()" id="quizRetryBtn" class="bg-red-700 hover:bg-red-600 text-white font-bold py-3 px-8 rounded transition shadow-lg shadow-red-900/50 hidden">
+                    <i class="fas fa-redo mr-2"></i> Retry Focus
+                </button>
+                <button onclick="closeQuizModal()" id="quizCloseBtn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 px-8 rounded transition shadow-lg hidden">
+                    <i class="fas fa-times mr-2"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app" class="max-w-7xl mx-auto hidden">
+        
+        <!-- HEADER & ACTIONS -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div>
+                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                    100 Day Spot Challenge
+                </h1>
+                <p class="text-slate-400 text-sm mt-1 tracking-wider">
+                    Protocol initialized by <span id="dispUserName" class="font-semibold text-white"></span> (<span id="dispUserAge"></span>)
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="exportData()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm transition border border-slate-600">
+                    <i class="fas fa-file-csv mr-2"></i>Export
+                </button>
+                <button onclick="confirmReset()" class="px-4 py-2 bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-900/50 rounded text-sm transition">
+                    <i class="fas fa-skull mr-2"></i>Reset
+                </button>
+                <button onclick="logout()" class="px-4 py-2 bg-purple-900/30 hover:bg-purple-900/50 text-purple-400 border border-purple-900/50 rounded text-sm transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 1: DASHBOARD GRID -->
+        <div class="flex items-center mb-3">
+            <h2 class="text-xl font-bold text-white">Challenge Status</h2>
+            <span class="ml-3 w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold">1</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            
+            <!-- CARD 1: Current Balance -->
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-emerald-500">
+                <div class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Current Balance</div>
+                <div class="text-3xl font-bold mt-1 mono" id="dispCurrentBalance">$0.00</div>
+                <div class="text-xs mt-2" id="dispTotalPnL">
+                    <span class="text-emerald-400">+0.00%</span> Total Return
+                </div>
+            </div>
+
+            <!-- CARD 2: Day Progress -->
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-cyan-500">
+                <div class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Day Progress</div>
+                <div class="flex items-baseline mt-1 gap-2">
+                    <div class="text-3xl font-bold mono" id="dispDay">1</div>
+                    <div class="text-slate-500 text-sm">/ 100</div>
+                </div>
+                <!-- Mini Progress Bar -->
+                <div class="w-full bg-slate-700 h-1.5 mt-4 rounded-full overflow-hidden">
+                    <div id="dayProgressBar" class="bg-cyan-500 h-full" style="width: 1%"></div>
+                </div>
+            </div>
+
+            <!-- CARD 3: Account Health / Discipline -->
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-purple-500">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Account Health (Consistency)</div>
+                    <i class="fas fa-dumbbell text-purple-400"></i>
+                </div>
+                <div class="health-bar-container w-full h-8 bg-slate-900 rounded border border-slate-700 relative overflow-hidden">
+                    <div class="absolute inset-0 z-10 flex justify-between px-2">
+                        <div class="w-px h-full bg-slate-800/50"></div>
+                        <div class="w-px h-full bg-slate-800/50"></div>
+                        <div class="w-px h-full bg-slate-800/50"></div>
+                        <div class="w-px h-full bg-slate-800/50"></div>
+                    </div>
+                    <div id="healthFill" class="health-fill h-full bg-gradient-to-r from-red-500 via-yellow-400 to-emerald-500" style="width: 100%;"></div>
+                </div>
+                <div class="flex justify-between text-xs mt-2 text-slate-500">
+                    <span>Critical</span>
+                    <span>Stable</span>
+                    <span>Thriving</span>
+                </div>
+            </div>
+
+            <!-- CARD 4: Game Accuracy -->
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-yellow-500">
+                <div class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Mental Challenge Success</div>
+                <div class="flex items-baseline mt-1 gap-2">
+                    <div class="text-3xl font-bold mono" id="dispGameAccuracy">0.0%</div>
+                </div>
+                <div class="text-xs mt-2 text-slate-500">
+                    <span id="dispGameStatus" class="font-bold text-yellow-400">Need Practice</span> Overall Accuracy
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PROJECTIONS PANEL -->
+        <div class="glass-panel rounded-xl p-4 mb-6 border border-slate-700/50">
+            <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center">
+                <span class="w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold mr-2">2</span>
+                <i class="fas fa-chart-line mr-2 text-blue-400"></i>
+                Future Projection
+            </h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="bg-slate-800/50 rounded p-2">
+                    <div class="text-xs text-slate-500">Initial Goal (<span id="initialGoalPerc"></span>)</div>
+                    <div class="text-lg font-bold text-yellow-300 mono" id="initialGoal100">$0.00</div>
+                </div>
+                <div class="bg-slate-800/50 rounded p-2">
+                    <div class="text-xs text-slate-500">Current Average (<span id="dispAvgReturnPerc">0.0%</span>)</div>
+                    <div class="text-lg font-bold text-emerald-300 mono" id="proj100Actual">$0.00</div>
+                </div>
+                <div class="bg-slate-800/50 rounded p-2">
+                    <div class="text-xs text-slate-500">Target for Day 100 (Best Case)</div>
+                    <div class="text-xl font-bold text-emerald-300 mono" id="proj100Target">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: INPUT FORM FOR CURRENT DAY -->
+        <div class="bg-slate-800 p-4 rounded-xl mb-6 border border-slate-700 shadow-lg">
+            <h3 class="text-sm font-bold text-white mb-4 flex items-center">
+                <span class="w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold mr-2">3</span>
+                <span class="bg-emerald-600 w-6 h-6 rounded flex items-center justify-center text-xs mr-2" id="inputDayNum">1</span>
+                Log Today's Trading Results
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-4">
+                <div class="md:col-span-2 bg-slate-900 p-2 rounded border border-slate-700">
+                    <div class="text-xs text-slate-400 uppercase tracking-wider">Today's Compounding Target</div>
+                    <div class="flex gap-4">
+                        <span id="currentTargetPerc" class="text-cyan-400 font-bold text-lg mono">0.0%</span>
+                        <span id="currentTargetAmt" class="text-white font-bold text-lg mono">$0.00</span>
+                    </div>
+                </div>
+                <div id="gameStatusIndicator" class="md:col-span-2 text-center p-2 rounded text-sm font-semibold cursor-pointer transition hover:scale-[1.02] bg-red-800/50 text-red-300 border border-red-700" onclick="showQuizModal()">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Prequiz Required! Click to start.
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div class="md:col-span-1">
+                    <label class="block text-xs text-slate-400 mb-1">Trades Taken</label>
+                    <input type="number" id="dailyTrades" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white text-sm" placeholder="0">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs text-slate-400 mb-1">Net P&L ($)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-slate-500">$</span>
+                        <input type="number" id="dailyPnL" class="w-full bg-slate-900 border border-slate-600 rounded p-2 pl-7 text-white text-sm" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="md:col-span-1">
+                    <button onclick="submitDay()" id="submitDayBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded text-sm transition disabled:bg-slate-700 disabled:text-slate-500" disabled>
+                        Complete Day
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA TABLE -->
+        <div class="overflow-x-auto rounded-xl border border-slate-700">
+            <table class="w-full text-sm text-left text-slate-400">
+                <thead class="text-xs text-slate-300 uppercase bg-slate-800 border-b border-slate-700">
+                    <tr>
+                        <th class="px-4 py-3">Date</th>
+                        <th class="px-4 py-3">Day</th>
+                        <th class="px-4 py-3">Start Cap</th>
+                        <th class="px-4 py-3">Target %</th>
+                        <th class="px-4 py-3">Achieved %</th>
+                        <th class="px-4 py-3 text-right">P/L ($)</th>
+                        <th class="px-4 py-3 text-right">End Total</th>
+                        <th class="px-4 py-3 text-center">Game Score/Attempts</th>
+                    </tr>
+                </thead>
+                <tbody id="logBody" class="divide-y divide-slate-800 bg-slate-900/50">
+                    <!-- Rows generated by JS -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECTION 4: EXPLANATORY NOTES -->
+        <div class="glass-panel rounded-xl p-6 border border-slate-700/50 mt-6">
+            <h3 class="text-lg font-bold text-yellow-500 mb-4"><i class="fas fa-info-circle mr-2"></i>Dashboard Explanations</h3>
+            <ul class="space-y-4 text-slate-400 text-sm">
+                <li>
+                    <span class="w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold float-left mr-3 mt-1">1</span>
+                    <div class="overflow-hidden">
+                        <p class="font-semibold text-slate-300">Challenge Status & Health:</p>
+                        The <span class="text-yellow-400">Mental Challenge Success</span> card tracks your overall accuracy across all successful attempts. The main table shows the attempts needed per day.
+                    </div>
+                </li>
+                <li>
+                    <span class="w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold float-left mr-3 mt-1">2</span>
+                    <div class="overflow-hidden">
+                        <p class="font-semibold text-slate-300">Future Projection:</p>
+                        Provides projections based on your initial goal, current average performance, and the target for the remaining days.
+                    </div>
+                </li>
+                <li>
+                    <span class="w-5 h-5 bg-yellow-500 text-black text-xs rounded-full flex items-center justify-center font-extrabold float-left mr-3 mt-1">3</span>
+                    <div class="overflow-hidden">
+                        <p class="font-semibold text-slate-300">Log Today's Trading Results:</p>
+                        You must successfully complete the **Prequiz** before the "Complete Day" button activates. If you fail the quiz, you can retry immediately. The daily target dynamically adjusts based on your compounding capital.
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- NEW SECTION: DASHBOARD PURPOSE AND ABOUT ME -->
+        <div class="glass-panel rounded-xl p-6 border border-slate-700/50 mt-6">
+            <h3 class="text-lg font-bold text-purple-400 mb-4"><i class="fas fa-bullseye mr-2"></i>About This Challenge Dashboard</h3>
+
+            <div class="text-slate-400 text-sm space-y-4 mb-6">
+                <!-- About This Dashboard (~300 words) -->
+                <p>
+                    This dashboard is designed as a focused accountability tool for traders specializing in spot market operations, such as buying and selling coins on platforms like Binance. It moves beyond simple P&L tracking to incorporate psychological and systematic discipline, which are far more critical for long-term success.
+                </p>
+                <p>
+                    **Why 100 Days?** The 100-day structure provides a clear, achievable timeframe for mastering emotional control and compounding consistency. It forces the trader to focus on small, manageable daily gains rather than chasing large, high-risk returns. The system is engineered to track compounding interest, showing the exponential potential of steady, disciplined trading.
+                </p>
+                <p>
+                    **Discipline Through Gamification:** The core feature is the **Daily Focus Challenge** (Prequiz). This quick mental test serves as a mandatory gatekeeper before the trading day can be logged. It ensures the trader is in a state of high concentration, mental agility, and is not emotionally compromised (e.g., trading while distracted, tired, or angry) before executing trades. By tracking the number of attempts needed to pass this quiz, the trader gains valuable insight into their own psychological readiness and consistency. The **Account Health** bar visualizes how consistently the trader meets their daily compounding targets, offering immediate feedback on overall discipline.
+                </p>
+                <p>
+                    The projections section provides forward-looking insight, illustrating the power of compounding based on the initial goal versus the actual average performance achieved. In essence, this dashboard is your personalized system for building the habits of a profitable trader: focus, consistency, and systematic execution.
+                </p>
+                
+                <h4 class="text-md font-semibold text-cyan-300 pt-4"><i class="fas fa-user-astronaut mr-2"></i> About the Trader/Developer</h4>
+                
+                <!-- About Me (~50 words) -->
+                <p>
+                    This challenge was designed and is executed by Khizar, a dedicated enthusiast specializing in cryptocurrency spot trading on platforms like Binance. With a strong interest in financial technology and systematic investing, Khizar built this tool to enforce the critical disciplines of focus and consistent compounding, turning a personal goal into a 100-day, quantifiable mission.
+                </p>
+
+                <!-- Social Links -->
+                <div class="flex gap-4 pt-2">
+                    <a href="https://www.linkedin.com/in/khizar226/" target="_blank" class="flex items-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition shadow-lg shadow-blue-900/50 text-sm">
+                        <i class="fab fa-linkedin mr-2"></i> LinkedIn
+                    </a>
+                    <a href="https://www.instagram.com/khizar226" target="_blank" class="flex items-center bg-pink-600 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded transition shadow-lg shadow-pink-900/50 text-sm">
+                        <i class="fab fa-instagram mr-2"></i> Instagram
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SECTION: ABOUT THE DEVELOPER -->
+        <div class="glass-panel rounded-xl p-6 border border-slate-700/50 mt-6">
+            <h3 class="text-lg font-bold text-cyan-400 mb-4"><i class="fas fa-user-tie mr-2"></i>About the Developer</h3>
+            
+            <div class="flex flex-col md:flex-row gap-6 items-start">
+                <!-- Developer Info -->
+                <div class="md:w-2/3">
+                    <h4 class="text-xl font-bold text-white mb-2">Khizar Hayat</h4>
+                    <p class="text-sm text-slate-300 mb-4 font-semibold">
+                        Marketing Strategist & Brand Consultant | 10+ Years Driving Global Campaigns, 
+                        Real Estate Marketing, SEO, Paid Media & Creative Design Excellence
+                    </p>
+                    
+                    <div class="text-slate-400 text-sm space-y-3">
+                        <p>
+                            I'm a Marketing Strategist & Brand Consultant with 10+ years of global experience helping brands 
+                            in the USA, UK, UAE, Australia, and Pakistan stand out in competitive markets. My work blends 
+                            creative direction, advanced graphic design expertise, and data‑driven marketing strategy to 
+                            deliver campaigns that not only look exceptional but also achieve measurable results.
+                        </p>
+                        
+                        <p>
+                            From optimizing real estate listings on Google Business, Zillow, and Apartments.com to crafting 
+                            brand identities, designing high‑impact visuals, and executing multi‑channel campaigns, I've 
+                            consistently driven growth — including boosting organic leads by 40% and engagement by 35%.
+                        </p>
+                        
+                        <p>
+                            Proficient in Adobe Creative Suite, Canva, Figma, WordPress, and MailChimp, I thrive at the 
+                            intersection of design, strategy, and technology — building brands that connect, convert, and endure.
+                        </p>
+                        
+                        <p class="pt-2">
+                            <span class="text-cyan-300 font-semibold">💬 Let's connect</span> if you're looking to elevate your 
+                            brand presence, optimize your marketing performance, or collaborate on creative, results‑driven campaigns.
+                        </p>
+                    </div>
+                    
+                    <!-- Signature -->
+                    <div class="mt-6 pt-4 border-t border-slate-600">
+                        <p class="text-slate-400 text-sm">
+                            <span class="text-yellow-400 font-mono">Khizar226</span> - Crafting digital excellence since 2013
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Skills & Expertise -->
+                <div class="md:w-1/3 bg-slate-800/50 rounded-lg p-4">
+                    <h5 class="text-white font-semibold mb-3 text-center">Core Expertise</h5>
+                    <div class="space-y-2">
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-chart-line text-emerald-400 mr-2 w-5"></i>
+                            Marketing Strategy
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-palette text-purple-400 mr-2 w-5"></i>
+                            Creative Direction
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-search text-blue-400 mr-2 w-5"></i>
+                            SEO Optimization
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-home text-orange-400 mr-2 w-5"></i>
+                            Real Estate Marketing
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-ad text-pink-400 mr-2 w-5"></i>
+                            Paid Media
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm">
+                            <i class="fas fa-paint-brush text-yellow-400 mr-2 w-5"></i>
+                            Brand Design
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Links -->
+                    <div class="mt-6 pt-4 border-t border-slate-600">
+                        <h6 class="text-white text-sm font-semibold mb-2 text-center">Let's Connect</h6>
+                        <div class="flex justify-center gap-3">
+                            <a href="https://www.linkedin.com/in/khizar226/" target="_blank" class="text-blue-400 hover:text-blue-300 transition">
+                                <i class="fab fa-linkedin text-lg"></i>
+                            </a>
+                            <a href="https://www.instagram.com/khizar226" target="_blank" class="text-pink-400 hover:text-pink-300 transition">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+                            <a href="mailto:khizar@example.com" class="text-red-400 hover:text-red-300 transition">
+                                <i class="fas fa-envelope text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="h-20"></div> <!-- Spacer -->
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="quiz.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
